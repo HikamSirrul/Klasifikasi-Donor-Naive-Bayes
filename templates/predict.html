@@ -1,0 +1,348 @@
+{% extends 'base.html' %}
+
+{% block title %}Formulir Skrining{% endblock %}
+
+{% block content %}
+    <div class="max-w-6xl mx-auto pb-20">
+        
+        <!-- INFO & DEMO TOOLS -->
+        <div class="bg-gradient-to-r from-red-800 to-red-900 rounded-2xl p-6 mb-8 text-white shadow-lg flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="flex items-center gap-4">
+                <div class="p-3 bg-white/10 rounded-full backdrop-blur-sm">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg">Input Data Medis</h3>
+                    <p class="text-red-100 text-sm max-w-md">Pastikan data yang dimasukkan sesuai dengan hasil<br>pemeriksaan fisik pendonor</p>
+                </div>
+            </div>
+
+            <!-- Tombol Demo -->
+            <div class="flex gap-3 p-2 rounded-xl backdrop-blur-sm">
+                <button onclick="isiDemo('layak')" class="flex items-center gap-2 px-4 py-2 bg-green-500 hover:bg-green-600 text-white text-xs font-bold rounded-lg transition transform hover:scale-105 shadow-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    Demo: LAYAK
+                </button>
+                <button onclick="isiDemo('tidak_layak')" class="flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white text-xs font-bold rounded-lg transition transform hover:scale-105 shadow-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    Demo: TIDAK
+                </button>
+            </div>
+        </div>
+
+        <!-- FORM UTAMA -->
+        <form id="donor-form" class="space-y-8">
+            
+            <!-- 1. DATA IDENTITAS -->
+            <section class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex items-center gap-3">
+                    <span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-600 font-bold text-sm">1</span>
+                    <h3 class="font-bold text-gray-700">Identitas Pendonor</h3>
+                </div>
+                <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="lg:col-span-2 space-y-1">
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Nama Lengkap</label>
+                        <input type="text" name="Nama_Pendonor" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition outline-none" placeholder="Sesuai KTP">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wide">NIK</label>
+                        <input type="number" name="NIK" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition outline-none" placeholder="16 Digit">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Gol. Darah</label>
+                        <select name="Golongan_Darah" class="w-full px-4 py-2 rounded-lg border border-gray-300 bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition outline-none cursor-pointer">
+                            <option value="Belum Tahu">Belum Tahu</option>
+                            <option value="A">A</option><option value="B">B</option>
+                            <option value="AB">AB</option><option value="O">O</option>
+                        </select>
+                    </div>
+                    <div class="lg:col-span-4 space-y-1">
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Alamat Lengkap</label>
+                        <input type="text" name="Alamat" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition outline-none" placeholder="Contoh: Jalan Aceh No. 79, Bandung">
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. PEMERIKSAAN FISIK -->
+            <section class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex items-center gap-3">
+                    <span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-600 font-bold text-sm">2</span>
+                    <h3 class="font-bold text-gray-700">Pemeriksaan Fisik</h3>
+                </div>
+                <div class="p-6 grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Usia (Th)</label>
+                        <input type="number" name="Usia" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition outline-none">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Gender</label>
+                        <select name="Jenis_Kelamin" class="w-full px-4 py-2 rounded-lg border border-gray-300 bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition outline-none">
+                            <option value="Laki-laki">Laki-laki</option><option value="Perempuan">Perempuan</option>
+                        </select>
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Berat (Kg)</label>
+                        <input type="number" step="0.1" name="Berat_Badan" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition outline-none">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Hb (g/dL)</label>
+                        <input type="number" step="0.1" name="Hemoglobin" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition outline-none">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Sistolik</label>
+                        <input type="number" name="Tekanan_Darah_Sistolik" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition outline-none">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Diastolik</label>
+                        <input type="number" name="Tekanan_Darah_Diastolik" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition outline-none">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Nadi</label>
+                        <input type="number" name="Denyut_Nadi" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition outline-none">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Suhu (°C)</label>
+                        <input type="number" step="0.1" name="Suhu_Tubuh" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition outline-none">
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. RIWAYAT KESEHATAN -->
+            <section class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex items-center gap-3">
+                    <span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-600 font-bold text-sm">3</span>
+                    <h3 class="font-bold text-gray-700">Riwayat Kesehatan & Risiko</h3>
+                </div>
+                <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-6">
+                    <!-- Helper Class untuk Select Riwayat -->
+                    {% macro select_riwayat(label, name) %}
+                    <div class="flex items-center justify-between p-3 rounded-lg border border-gray-100 hover:border-gray-300 transition bg-gray-50/50">
+                        <label class="text-sm font-medium text-gray-700 mr-2">{{ label }}</label>
+                        <select name="{{ name }}" class="w-24 px-2 py-1.5 rounded border border-gray-300 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-200 outline-none">
+                            <option value="Tidak">Tidak</option>
+                            <option value="Ya">Ya</option>
+                        </select>
+                    </div>
+                    {% endmacro %}
+
+                    {{ select_riwayat('Pernah Tertusuk Jarum < 12 Bulan Terakhir?', 'Tertusuk_Jarum_Medis') }}
+                    {{ select_riwayat('Riwayat Operasi < 12 Bulan Terakhir?', 'Riwayat_Operasi') }}
+                    {{ select_riwayat('Sedang Minum Obat?', 'Sedang_Obat') }}
+                    
+                    <div class="flex items-center justify-between p-3 rounded-lg border border-gray-100 hover:border-gray-300 transition bg-gray-50/50">
+                        <label class="text-sm font-medium text-gray-700 mr-2">Sedang Hamil/Menyusui?</label>
+                        <select name="Riwayat_Kehamilan_Bersalin" class="w-32 px-2 py-1.5 rounded border border-gray-300 text-sm focus:border-blue-500 outline-none">
+                            <option value="Tidak">Tidak</option>
+                            <option value="Ya">Ya</option>
+                            <option value="Tidak Berlaku">N/A (Pria)</option>
+                        </select>
+                    </div>
+
+                    {{ select_riwayat('Vaksinasi < 28 Hari Terakhir?', 'Vaksinasi_<28Hari') }}
+                    {{ select_riwayat('Sakit Kepala/Demam?', 'Sakit_Kepala_Demam') }}
+                    {{ select_riwayat('Pernah Menerima Transfusi Darah < 6 Bulan Terakhir?', 'Pernah_Transfusi') }}
+                    {{ select_riwayat('Tato / Piercing < 12 Bulan Terakhir?', 'Memiliki_Tato_Piercing') }}
+                    {{ select_riwayat('Seks Berisiko?', 'Perilaku_Seksual_Berisko_Tinggi') }}
+                    {{ select_riwayat('Riwayat Penyakit Kronis?', 'Riwayat_Penyakit_Kronis') }}
+                    {{ select_riwayat('Pernah Berada Diluar Negeri < 6 Bulan Terakhir?', 'Pernah_Berada_Diluar_Negeri') }}
+                </div>
+            </section>
+
+            <!-- 4. KESIAPAN -->
+            <section class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex items-center gap-3">
+                    <span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-600 font-bold text-sm">4</span>
+                    <h3 class="font-bold text-gray-700">Kesiapan Donor</h3>
+                </div>
+                <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="p-4 rounded-xl border border-gray-200 hover:border-blue-300 transition bg-white flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <label class="font-bold text-gray-700">Tidur Cukup (Min 5 Jam)?</label>
+                        </div>
+                        <select name="Tidur_Cukup" class="w-24 px-2 py-1.5 rounded border border-gray-300 text-sm focus:border-blue-500 outline-none">
+                            <option value="Ya">Ya</option>
+                            <option value="Tidak">Tidak</option>
+                        </select>
+                    </div>
+                    <div class="p-4 rounded-xl border border-gray-200 hover:border-blue-300 transition bg-white flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <label class="font-bold text-gray-700">Sudah Makan?</label>
+                        </div>
+                        <select name="Makan_Sebelum_Donor" class="w-24 px-2 py-1.5 rounded border border-gray-300 text-sm focus:border-blue-500 outline-none">
+                            <option value="Ya">Ya</option>
+                            <option value="Tidak">Tidak</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TOMBOL ANALISIS -->
+            <div class="pt-6">
+                <button type="submit" id="submit-button" class="w-full bg-red-700 hover:bg-red-800 text-white text-lg font-bold py-4 rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-1 flex items-center justify-center gap-3">
+                    <svg class="w-6 h-6 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                    ANALISIS KELAYAKAN
+                </button>
+            </div>
+        </form>
+
+        <!-- HASIL (MODAL LIKE) -->
+        <div id="result-section" class="hidden fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+            <!-- Background backdrop -->
+            <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                
+                <div class="fixed inset-0 bg-gray-900 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+
+                <!-- Spacer to center modal -->
+                <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+                <div class="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-3xl sm:w-full">
+                    
+                    <!-- Header Hasil -->
+                    <div id="status-header" class="bg-gray-50 px-6 py-6 border-b border-gray-200 flex flex-col items-center justify-center text-center">
+                        <div id="result-icon" class="mb-4 transform scale-150"></div>
+                        <h3 class="text-3xl font-extrabold text-gray-900 uppercase tracking-widest" id="result-text"></h3>
+                        <p class="text-sm text-gray-500 mt-2">Hasil prediksi sistem berdasarkan data input.</p>
+                    </div>
+
+                    <!-- Content Alasan (Jika Ada) -->
+                    <div id="reasons-box" class="hidden px-6 py-6 bg-red-50 border-t border-b border-red-100">
+                        <h4 class="text-red-800 font-bold text-lg mb-3 flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                            Penyebab Penolakan:
+                        </h4>
+                        <ul id="reasons-list" class="list-disc pl-5 text-gray-700 space-y-2 text-sm font-medium"></ul>
+                    </div>
+
+                    <!-- Footer / Actions -->
+                    <div class="bg-gray-50 px-6 py-4 sm:flex sm:flex-row-reverse justify-center gap-4">
+                        <button onclick="finishAndReset()" type="button" class="w-full inline-flex justify-center rounded-xl border border-transparent shadow-sm px-8 py-3 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:w-auto sm:text-sm transition transform hover:scale-105">
+                            Selesai & Reset
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const DEMO_DATA = {
+        'layak': {
+            'Nama_Pendonor': 'Budi Santoso', 'NIK': '327301000010001', 'Alamat': 'Jl. Merdeka No. 10, Bandung', 'Golongan_Darah': 'O',
+            'Usia': 25, 'Jenis_Kelamin': 'Laki-laki', 'Berat_Badan': 65, 'Hemoglobin': 14.5, 'Tekanan_Darah_Sistolik': 120, 'Tekanan_Darah_Diastolik': 80, 'Denyut_Nadi': 75, 'Suhu_Tubuh': 36.5,
+            'Tertusuk_Jarum_Medis': 'Tidak', 'Riwayat_Operasi': 'Tidak', 'Sedang_Obat': 'Tidak', 'Riwayat_Kehamilan_Bersalin': 'Tidak Berlaku', 'Vaksinasi_<28Hari': 'Tidak',
+            'Sakit_Kepala_Demam': 'Tidak', 'Pernah_Transfusi': 'Tidak', 'Memiliki_Tato_Piercing': 'Tidak', 'Perilaku_Seksual_Berisko_Tinggi': 'Tidak', 
+            'Riwayat_Penyakit_Kronis': 'Tidak', 'Pernah_Berada_Diluar_Negeri': 'Tidak', 'Tidur_Cukup': 'Ya', 'Makan_Sebelum_Donor': 'Ya'
+        },
+        'tidak_layak': {
+            'Nama_Pendonor': 'Siti Aminah', 'NIK': '327301000020002', 'Alamat': 'Jl. Dago No. 55, Bandung', 'Golongan_Darah': 'A',
+            'Usia': 18, 'Jenis_Kelamin': 'Perempuan', 'Berat_Badan': 48, 'Hemoglobin': 10.2, 'Tekanan_Darah_Sistolik': 150, 'Tekanan_Darah_Diastolik': 95, 'Denyut_Nadi': 110, 'Suhu_Tubuh': 36.6,
+            'Tertusuk_Jarum_Medis': 'Ya', 'Riwayat_Operasi': 'Tidak', 'Sedang_Obat': 'Tidak', 'Riwayat_Kehamilan_Bersalin': 'Tidak', 'Vaksinasi_<28Hari': 'Tidak',
+            'Sakit_Kepala_Demam': 'Tidak', 'Pernah_Transfusi': 'Tidak', 'Memiliki_Tato_Piercing': 'Tidak', 'Perilaku_Seksual_Berisko_Tinggi': 'Tidak', 
+            'Riwayat_Penyakit_Kronis': 'Ya', 'Pernah_Berada_Diluar_Negeri': 'Tidak', 'Tidur_Cukup': 'Tidak', 'Makan_Sebelum_Donor': 'Ya'
+        }
+    };
+
+    function isiDemo(tipe) {
+        const data = DEMO_DATA[tipe];
+        const form = document.getElementById('donor-form');
+        
+        // Animasi Scroll ke Form
+        form.scrollIntoView({ behavior: 'smooth' });
+
+        for (const [key, value] of Object.entries(data)) {
+            const input = form.elements[key];
+            if (input) {
+                input.value = value;
+                // Efek Flash Kuning
+                input.classList.add('bg-yellow-50', 'border-yellow-400', 'transition-colors');
+                setTimeout(() => input.classList.remove('bg-yellow-50', 'border-yellow-400'), 800);
+            }
+        }
+    }
+
+    function resetForm() {
+        const form = document.getElementById('donor-form');
+        const resultSection = document.getElementById('result-section');
+        
+        form.reset();
+        
+        // Hapus highlight kuning jika tersisa
+        const inputs = form.querySelectorAll('input, select');
+        inputs.forEach(input => input.classList.remove('bg-yellow-50', 'border-yellow-400'));
+
+        resultSection.classList.add('hidden');
+    }
+
+    function finishAndReset() {
+        resetForm();
+        window.scrollTo(0, 0); // Scroll instan ke atas
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('donor-form');
+        const submitBtn = document.getElementById('submit-button');
+        const resultSection = document.getElementById('result-section');
+        const statusHeader = document.getElementById('status-header');
+        const resultText = document.getElementById('result-text');
+        const resultIcon = document.getElementById('result-icon');
+        const reasonsBox = document.getElementById('reasons-box');
+        const reasonsList = document.getElementById('reasons-list');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Loading State yang Keren
+            const originalBtnText = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> MEMPROSES DATA...`;
+
+            try {
+                const formData = new FormData(form);
+                const data = Object.fromEntries(formData.entries());
+
+                const res = await fetch('/api/predict', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(data)
+                });
+
+                const result = await res.json();
+                if (!res.ok) throw new Error(result.error);
+
+                // Tampilkan Modal Hasil
+                resultSection.classList.remove('hidden');
+                resultText.textContent = result.prediksi.toUpperCase();
+
+                if (result.prediksi === 'Layak') {
+                    // Style Hijau
+                    statusHeader.className = 'bg-green-50 px-6 py-8 border-b border-green-200 flex flex-col items-center justify-center text-center';
+                    resultIcon.innerHTML = `<div class="p-4 bg-green-100 rounded-full"><svg class="w-16 h-16 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg></div>`;
+                    resultText.className = 'text-4xl font-extrabold text-green-700 uppercase tracking-widest mt-4';
+                    reasonsBox.classList.add('hidden');
+                } else {
+                    // Style Merah
+                    statusHeader.className = 'bg-red-50 px-6 py-8 border-b border-red-200 flex flex-col items-center justify-center text-center';
+                    resultIcon.innerHTML = `<div class="p-4 bg-red-100 rounded-full"><svg class="w-16 h-16 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg></div>`;
+                    resultText.className = 'text-4xl font-extrabold text-red-700 uppercase tracking-widest mt-4';
+                    
+                    if (result.alasan.length > 0) {
+                        reasonsBox.classList.remove('hidden');
+                        reasonsList.innerHTML = result.alasan.map(r => `<li>${r}</li>`).join('');
+                    }
+                }
+                
+            } catch (err) {
+                alert('Error: ' + err.message);
+            } finally {
+                // Reset Tombol
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+            }
+        });
+    });
+</script>
+{% endblock %}

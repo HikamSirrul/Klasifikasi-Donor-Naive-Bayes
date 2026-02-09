@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+{% block title %}Evaluasi Model{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto space-y-1 pb-10">
+
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="bg-gray-800 text-white p-6 flex justify-between items-center">
+            <div>
+                <h2 class="text-xl font-bold">Laporan Kinerja Model</h2>
+                <p class="text-gray-400 text-sm mt-1">Perbandingan Data Latih vs Data Uji</p>
+            </div>
+            <div class="text-right">
+                <span class="bg-gray-700 px-3 py-1 rounded text-xs font-mono">Categorical NB</span>
+            </div>
+        </div>
+        </div>
+
+        <div class="p-8">
+            <!-- Score Cards -->
+             
+            <div class=" bg-white p-10 rounded-lg max-w-6xl mx-auto space-y-1 pb-10 ">
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-6 mb-10">
+                <!-- Training Acc -->
+                <div class="p-5 bg-blue-50 rounded-xl text-center border border-blue-200">
+                    <div class="text-3xl font-extrabold text-blue-700">{{ metrics.training_accuracy }}%</div>
+                    <div class="text-xs text-gray-500 uppercase font-bold mt-2 tracking-wider">Akurasi Training</div>
+                </div>
+                <!-- Testing Acc -->
+                <div class="p-5 bg-indigo-50 rounded-xl text-center border border-indigo-200">
+                    <div class="text-3xl font-extrabold text-indigo-700">{{ metrics.testing_accuracy }}%</div>
+                    <div class="text-xs text-gray-500 uppercase font-bold mt-2 tracking-wider">Akurasi Testing</div>
+                </div>
+                
+                <!-- Metrik Lainnya -->
+                <div class="p-5 bg-green-50 rounded-xl text-center border border-green-200">
+                    <div class="text-3xl font-extrabold text-green-600">{{ metrics.presisi }}%</div>
+                    <div class="text-xs text-gray-500 uppercase font-bold mt-2 tracking-wider">Presisi</div>
+                </div>
+                <div class="p-5 bg-yellow-50 rounded-xl text-center border border-yellow-200">
+                    <div class="text-3xl font-extrabold text-yellow-600">{{ metrics.recall }}%</div>
+                    <div class="text-xs text-gray-500 uppercase font-bold mt-2 tracking-wider">Recall</div>
+                </div>
+                <div class="p-5 bg-purple-50 rounded-xl text-center border border-purple-200">
+                    <div class="text-3xl font-extrabold text-purple-600">{{ metrics.f1_score }}%</div>
+                    <div class="text-xs text-gray-500 uppercase font-bold mt-2 tracking-wider">F1-Score</div>
+                </div>
+            </div>
+
+            <!-- Chart Visual -->
+                <h3 class="text-lg font-bold text-gray-700 mb-6 text-center border-b pb-4">Visualisasi Performa</h3>
+                <div class="relative h-80 w-full">
+                    <canvas id="metricsChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="mt-6 text-center text-xs text-gray-400 italic">
+                *Nilai akurasi diambil langsung dari file model hasil pelatihan terakhir.
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        try {
+            const ctx = document.getElementById('metricsChart').getContext('2d');
+            
+            // Ambil data dari Jinja
+            const trainAcc = Number("{{ metrics.training_accuracy }}");
+            const testAcc  = Number("{{ metrics.testing_accuracy }}");
+            const presisi  = Number("{{ metrics.presisi }}");
+            const recall   = Number("{{ metrics.recall }}");
+            const f1       = Number("{{ metrics.f1_score }}");
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Akurasi Training', 'Akurasi Testing', 'Presisi', 'Recall', 'F1-Score'],
+                    datasets: [{
+                        label: 'Nilai (%)',
+                        data: [trainAcc, testAcc, presisi, recall, f1],
+                        backgroundColor: [
+                            'rgba(37, 99, 235, 0.7)',   
+                            'rgba(79, 70, 229, 0.7)',   
+                            'rgba(16, 185, 129, 0.7)', 
+                            'rgba(245, 158, 11, 0.7)', 
+                            'rgba(139, 92, 246, 0.7)'  
+                        ],
+                        borderColor: [
+                            'rgb(37, 99, 235)',
+                            'rgb(79, 70, 229)',
+                            'rgb(16, 185, 129)',
+                            'rgb(245, 158, 11)',
+                            'rgb(139, 92, 246)'
+                        ],
+                        borderWidth: 2,
+                        borderRadius: 6,
+                        barPercentage: 0.6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.parsed.y + '%';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { 
+                            beginAtZero: true, 
+                            max: 100,
+                            grid: { color: '#f3f4f6' }
+                        },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        } catch (err) {
+            console.error("Gagal memuat grafik:", err);
+        }
+    });
+</script>
+{% endblock %}

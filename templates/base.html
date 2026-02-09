@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SIM PMI{% endblock %} - Kota Bandung</title>
+    
+    <!-- LIBRARY GLOBAL -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        /* DataTables Style */
+        .dataTables_wrapper .dataTables_length select { padding-right: 2rem; border-radius: 0.375rem; border-color: #e5e7eb; }
+        .dataTables_wrapper .dataTables_filter input { border-radius: 0.375rem; border-color: #e5e7eb; padding: 0.25rem 0.5rem; margin-left: 0.5rem; }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans text-gray-800 h-screen flex overflow-hidden">
+
+    <!-- 1. OVERLAY GELAP (Hanya Muncul di Mobile saat Sidebar Buka) -->
+    <div id="mobile-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-20 hidden lg:hidden transition-opacity duration-300 opacity-0"></div>
+
+    <!-- 2. SIDEBAR (Responsive) -->
+    <!-- Class Penting: fixed inset-y-0 z-30 transform -translate-x-full (Sembunyi di HP) lg:translate-x-0 lg:static (Muncul di PC) -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-30 w-64 bg-red-900 text-white flex flex-col transition-transform duration-300 ease-in-out transform -translate-x-full lg:translate-x-0 lg:static lg:inset-auto shadow-2xl">
+        
+        <!-- Logo Area -->
+        <div class="h-20 flex items-center justify-between px-6 border-b border-red-800 bg-red-900">
+            <div class="flex items-center gap-3">
+                <!-- Logo tanpa background putih -->
+                <img src="{{ url_for('static', filename='images/pmi.png') }}" alt="Logo" class="h-12 w-auto">
+                <div>
+                    <h1 class="font-bold text-sm tracking-wider leading-tight">PMI Kota Bandung</h1>
+                    <p class="text-[10px] text-red-200  tracking-wide">Sistem Klasifikasi Donor Darah</p>
+                </div>
+            </div>
+            <!-- Tombol Tutup Sidebar (Hanya di Mobile) -->
+            <button id="close-sidebar" class="lg:hidden text-red-200 hover:text-white focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+
+        <!-- Menu Navigasi -->
+        <nav class="flex-1 overflow-y-auto py-6">
+            <ul class="space-y-2 px-4">
+                <li>
+                    <a href="/dashboard" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors {{ 'bg-red-800 text-white shadow-inner border-l-4 border-white' if request.endpoint == 'dashboard' else 'text-red-100 hover:bg-red-800 hover:text-white' }}">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                        <span class="font-medium">Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/predict_page" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors {{ 'bg-red-800 text-white shadow-inner border-l-4 border-white' if request.endpoint == 'predict_page' else 'text-red-100 hover:bg-red-800 hover:text-white' }}">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                        <span class="font-medium">Klasifikasi</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/evaluasi" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors {{ 'bg-red-800 text-white shadow-inner border-l-4 border-white' if request.endpoint == 'evaluasi' else 'text-red-100 hover:bg-red-800 hover:text-white' }}">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                        <span class="font-medium">Evaluasi Model</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- User Profile -->
+        <div class="p-4 border-t border-red-800 bg-red-900">
+            <div class="flex items-center gap-3 mb-3">
+                <div class="w-10 h-10 rounded-full bg-white text-red-900 flex items-center justify-center font-bold text-lg border-2 border-red-200 shadow-sm">
+                    {{ current_user.nama_lengkap[0].upper() }}
+                </div>
+                <div class="overflow-hidden">
+                    <p class="text-sm font-semibold truncate">{{ current_user.nama_lengkap }}</p>
+                    <p class="text-xs text-red-300">Petugas Medis</p>
+                </div>
+            </div>
+            <a href="/logout" class="block w-full py-2 px-4 bg-red-800 hover:bg-red-700 text-center text-sm font-bold rounded transition border border-red-700 shadow-sm">
+                Logout
+            </a>
+        </div>
+    </aside>
+
+    <!-- 3. KONTEN UTAMA WRAPPER -->
+    <div class="flex-1 flex flex-col overflow-hidden min-w-0">
+        
+        <!-- HEADER MOBILE (Tombol Hamburger) -->
+        <header class="bg-white shadow-sm p-4 flex items-center justify-between lg:hidden z-10 sticky top-0">
+            <div class="flex items-center gap-4">
+                <button id="open-sidebar" class="text-gray-500 hover:text-red-700 focus:outline-none p-2 rounded-lg hover:bg-gray-100 transition">
+                    <!-- Icon Hamburger -->
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Scrollable Content Area -->
+        <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-4 md:p-8 relative">
+            
+            <!-- Notifikasi Global -->
+            <div id="global-notification-area">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                  {% if messages %}
+                    {% for category, message in messages %}
+                      <div class="flash-message mb-6 p-4 rounded-lg shadow-sm border-l-4 flex justify-between items-center transition-all duration-500 
+                          {{ 'bg-green-50 text-green-700 border-green-500' if category == 'success' else 
+                             'bg-red-50 text-red-700 border-red-500' if category == 'error' else
+                             'bg-yellow-50 text-yellow-700 border-yellow-500' }}">
+                          <div class="flex items-center gap-3">
+                              <span class="text-xl">{{ '✅' if category == 'success' else '⚠️' }}</span>
+                              <span class="font-medium text-sm md:text-base">{{ message }}</span>
+                          </div>
+                          <button onclick="this.parentElement.remove()" class="text-gray-400 hover:text-gray-600 font-bold px-2">✕</button>
+                      </div>
+                    {% endfor %}
+                  {% endif %}
+                {% endwith %}
+            </div>
+
+            <!-- Konten Halaman Spesifik -->
+            {% block content %}{% endblock %}
+
+        </main>
+    </div>
+
+    <!-- Script Global (Sidebar Toggle & Auto Hide Flash) -->
+    <script>
+        $(document).ready(function() {
+            // Sidebar Logic (Mobile)
+            const sidebar = $('#sidebar');
+            const overlay = $('#mobile-overlay');
+            const openBtn = $('#open-sidebar');
+            const closeBtn = $('#close-sidebar');
+
+            function openSidebar() {
+                sidebar.removeClass('-translate-x-full');
+                overlay.removeClass('hidden');
+                // Sedikit delay agar transisi opacity jalan
+                setTimeout(() => overlay.removeClass('opacity-0'), 10);
+            }
+
+            function closeSidebar() {
+                sidebar.addClass('-translate-x-full');
+                overlay.addClass('opacity-0');
+                // Tunggu transisi selesai baru hide
+                setTimeout(() => overlay.addClass('hidden'), 300);
+            }
+
+            openBtn.on('click', openSidebar);
+            closeBtn.on('click', closeSidebar);
+            overlay.on('click', closeSidebar); // Klik luar sidebar untuk tutup
+
+            // Auto Hide Notifikasi
+            if ($('.flash-message').length > 0) {
+                setTimeout(function() {
+                    $('.flash-message').fadeOut('slow', function() { $(this).remove(); });
+                }, 5000);
+            }
+        });
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
