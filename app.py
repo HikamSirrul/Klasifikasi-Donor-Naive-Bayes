@@ -12,12 +12,7 @@ from io import BytesIO
 from flask import send_file
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'rahasia_skripsi_pmi_2025'
-
-# --- KONEKSI DATABASE MYSQL ---
-app = Flask(__name__)
-# Gunakan secret key dari environment variable untuk keamanan, atau default untuk dev
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'kunci_rahasia_default_skripsi')
+app.config['SECRET_KEY'] = os.environ.get('AVNS_BnlNI2Xd9LNiMQ-yg0G', 'kunci_rahasia_default_skripsi')
 
 # --- KONEKSI DATABASE CERDAS ---
 # 1. Cek apakah ada environment variable 'DATABASE_URL' (dari Render)
