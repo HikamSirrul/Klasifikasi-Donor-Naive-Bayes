@@ -12,19 +12,10 @@ from io import BytesIO
 from flask import send_file
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.environ.get('AVNS_BnlNI2Xd9LNiMQ-yg0G', 'kunci_rahasia_default_skripsi')
+app.config['SECRET_KEY'] = 'rahasia_skripsi_pmi_2025'
 
-# --- KONEKSI DATABASE CERDAS ---
-# 1. Cek apakah ada environment variable 'DATABASE_URL' (dari Render)
-# 2. Jika tidak ada, gunakan koneksi MySQL Lokal (XAMPP/Laragon)
-db_uri = os.environ.get('DATABASE_URL')
-
-if db_uri and db_uri.startswith("mysql://"):
-    # Fix untuk kompatibilitas SQLAlchemy di beberapa server (seperti Aiven)
-    db_uri = db_uri.replace("mysql://", "mysql://avnadmin:AVNS_BnlNI2Xd9LNiMQ-yg0G@mysql-14301b2e-skripsi-pmi.h.aivencloud.com:13977/defaultdb?ssl-mode=REQUIRED")
-
-# Fallback ke MySQL Lokal jika belum di-deploy
-app.config['SQLALCHEMY_DATABASE_URI'] = db_uri or 'mysql+pymysql://root:@localhost/skripsi_pmi'
+# --- KONEKSI DATABASE MYSQL ---
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost/skripsi_pmi'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
