@@ -82,27 +82,27 @@
                     </div>
                     <div class="space-y-1">
                         <label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Berat (Kg)</label>
-                        <input type="number" step="0.1" name="Berat_Badan" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition outline-none">
+                        <input type="number" step="0.1" name="BB" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition outline-none">
                     </div>
                     <div class="space-y-1">
                         <label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Hb (g/dL)</label>
-                        <input type="number" step="0.1" name="Hemoglobin" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition outline-none">
+                        <input type="number" step="0.1" name="HB" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition outline-none">
                     </div>
                     <div class="space-y-1">
                         <label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Sistolik</label>
-                        <input type="number" name="Tekanan_Darah_Sistolik" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition outline-none">
+                        <input type="number" name="Sistolik" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition outline-none">
                     </div>
                     <div class="space-y-1">
                         <label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Diastolik</label>
-                        <input type="number" name="Tekanan_Darah_Diastolik" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition outline-none">
+                        <input type="number" name="Diastolik" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition outline-none">
                     </div>
                     <div class="space-y-1">
                         <label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Nadi</label>
-                        <input type="number" name="Denyut_Nadi" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition outline-none">
+                        <input type="number" name="Nadi" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition outline-none">
                     </div>
                     <div class="space-y-1">
                         <label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Suhu (°C)</label>
-                        <input type="number" step="0.1" name="Suhu_Tubuh" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition outline-none">
+                        <input type="number" step="0.1" name="Suhu" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition outline-none">
                     </div>
                 </div>
             </section>
@@ -125,26 +125,21 @@
                     </div>
                     {% endmacro %}
 
-                    {{ select_riwayat('Pernah Tertusuk Jarum < 12 Bulan Terakhir?', 'Tertusuk_Jarum_Medis') }}
-                    {{ select_riwayat('Riwayat Operasi < 12 Bulan Terakhir?', 'Riwayat_Operasi') }}
-                    {{ select_riwayat('Sedang Minum Obat?', 'Sedang_Obat') }}
-                    
+                    {{ select_riwayat('Riwayat Operasi < 12 Bulan Terakhir?', 'Operasi') }}
+                                        
                     <div class="flex items-center justify-between p-3 rounded-lg border border-gray-100 hover:border-gray-300 transition bg-gray-50/50">
                         <label class="text-sm font-medium text-gray-700 mr-2">Sedang Hamil/Menyusui?</label>
-                        <select name="Riwayat_Kehamilan_Bersalin" class="w-32 px-2 py-1.5 rounded border border-gray-300 text-sm focus:border-blue-500 outline-none">
+                        <select name="Kehamilan" class="w-32 px-2 py-1.5 rounded border border-gray-300 text-sm focus:border-blue-500 outline-none">
                             <option value="Tidak">Tidak</option>
                             <option value="Ya">Ya</option>
                             <option value="Tidak Berlaku">N/A (Pria)</option>
                         </select>
                     </div>
 
-                    {{ select_riwayat('Vaksinasi < 28 Hari Terakhir?', 'Vaksinasi_<28Hari') }}
-                    {{ select_riwayat('Sakit Kepala/Demam?', 'Sakit_Kepala_Demam') }}
-                    {{ select_riwayat('Pernah Menerima Transfusi Darah < 6 Bulan Terakhir?', 'Pernah_Transfusi') }}
-                    {{ select_riwayat('Tato / Piercing < 12 Bulan Terakhir?', 'Memiliki_Tato_Piercing') }}
-                    {{ select_riwayat('Seks Berisiko?', 'Perilaku_Seksual_Berisko_Tinggi') }}
-                    {{ select_riwayat('Riwayat Penyakit Kronis?', 'Riwayat_Penyakit_Kronis') }}
-                    {{ select_riwayat('Pernah Berada Diluar Negeri < 6 Bulan Terakhir?', 'Pernah_Berada_Diluar_Negeri') }}
+                    {{ select_riwayat('Sakit Kepala/Demam?', 'Demam') }}
+                    {{ select_riwayat('Pernah Menerima Transfusi Darah < 6 Bulan Terakhir?', 'Transfusi') }}
+                    {{ select_riwayat('Seks Berisiko?', 'Seksual_Berisko') }}
+                    {{ select_riwayat('Riwayat Penyakit Kronis?', 'Penyakit_Kronis') }}
                 </div>
             </section>
 
@@ -232,17 +227,17 @@
     const DEMO_DATA = {
         'layak': {
             'Nama_Pendonor': 'Budi Santoso', 'NIK': '327301000010001', 'Alamat': 'Jl. Merdeka No. 10, Bandung', 'Golongan_Darah': 'O',
-            'Usia': 25, 'Jenis_Kelamin': 'Laki-laki', 'Berat_Badan': 65, 'Hemoglobin': 14.5, 'Tekanan_Darah_Sistolik': 120, 'Tekanan_Darah_Diastolik': 80, 'Denyut_Nadi': 75, 'Suhu_Tubuh': 36.5,
-            'Tertusuk_Jarum_Medis': 'Tidak', 'Riwayat_Operasi': 'Tidak', 'Sedang_Obat': 'Tidak', 'Riwayat_Kehamilan_Bersalin': 'Tidak Berlaku', 'Vaksinasi_<28Hari': 'Tidak',
-            'Sakit_Kepala_Demam': 'Tidak', 'Pernah_Transfusi': 'Tidak', 'Memiliki_Tato_Piercing': 'Tidak', 'Perilaku_Seksual_Berisko_Tinggi': 'Tidak', 
-            'Riwayat_Penyakit_Kronis': 'Tidak', 'Pernah_Berada_Diluar_Negeri': 'Tidak', 'Tidur_Cukup': 'Ya', 'Makan_Sebelum_Donor': 'Ya'
+            'Usia': 25, 'Jenis_Kelamin': 'Laki-laki', 'BB': 65, 'HB': 14.5, 'Sistolik': 120, 'Diastolik': 80, 'Nadi': 75, 'Suhu': 36.5,
+            'Operasi': 'Tidak', 'Kehamilan': 'Tidak Berlaku',
+            'Demam': 'Tidak', 'Transfusi': 'Tidak', 'Seksual_Berisko': 'Tidak', 
+            'Penyakit_Kronis': 'Tidak', 'Tidur_Cukup': 'Ya', 'Sarapan': 'Ya'
         },
         'tidak_layak': {
             'Nama_Pendonor': 'Siti Aminah', 'NIK': '327301000020002', 'Alamat': 'Jl. Dago No. 55, Bandung', 'Golongan_Darah': 'A',
-            'Usia': 18, 'Jenis_Kelamin': 'Perempuan', 'Berat_Badan': 48, 'Hemoglobin': 10.2, 'Tekanan_Darah_Sistolik': 150, 'Tekanan_Darah_Diastolik': 95, 'Denyut_Nadi': 110, 'Suhu_Tubuh': 36.6,
-            'Tertusuk_Jarum_Medis': 'Ya', 'Riwayat_Operasi': 'Tidak', 'Sedang_Obat': 'Tidak', 'Riwayat_Kehamilan_Bersalin': 'Tidak', 'Vaksinasi_<28Hari': 'Tidak',
-            'Sakit_Kepala_Demam': 'Tidak', 'Pernah_Transfusi': 'Tidak', 'Memiliki_Tato_Piercing': 'Tidak', 'Perilaku_Seksual_Berisko_Tinggi': 'Tidak', 
-            'Riwayat_Penyakit_Kronis': 'Ya', 'Pernah_Berada_Diluar_Negeri': 'Tidak', 'Tidur_Cukup': 'Tidak', 'Makan_Sebelum_Donor': 'Ya'
+            'Usia': 18, 'Jenis_Kelamin': 'Perempuan', 'BB': 48, 'HB': 10.2, 'Sistolik': 150, 'Diastolik': 95, 'Nadi': 110, 'Suhu': 36.6,
+            'Operasi': 'Ya', 'Kehamilan': 'Tidak',
+            'Demam': 'Tidak', 'Transfusi': 'Tidak', 'Seksual_Berisko': 'Tidak', 
+            'Penyakit_Kronis': 'Ya','Tidur_Cukup': 'Tidak', 'Sarapan': 'Ya'
         }
     };
 

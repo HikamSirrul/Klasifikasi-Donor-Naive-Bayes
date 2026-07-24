@@ -50,17 +50,12 @@ class Riwayat(db.Model):
     nadi = db.Column(db.Integer)
     suhu = db.Column(db.Float)
     # Risiko
-    tertusuk_jarum = db.Column(db.String(10))
     riwayat_operasi = db.Column(db.String(10))
-    sedang_obat = db.Column(db.String(10))
     riwayat_hamil = db.Column(db.String(20))
-    vaksinasi = db.Column(db.String(10))
     sakit_kepala = db.Column(db.String(10))
     transfusi = db.Column(db.String(10))
-    tato_piercing = db.Column(db.String(10))
     seks_berisiko = db.Column(db.String(10))
     penyakit_kronis = db.Column(db.String(10))
-    luar_negeri = db.Column(db.String(10))
     # Kesiapan
     tidur_cukup = db.Column(db.String(10))
     makan_sebelum = db.Column(db.String(10))
@@ -75,7 +70,7 @@ def load_user(user_id):
 # --- LOAD MODEL NB ---
 try:
     # Load file 
-    paket = joblib.load('model_naive_bayes.pkl')
+    paket = joblib.load('model_naive_bayes_pmi.pkl')
     
     # Ekstrak komponen
     model = paket['model']
@@ -88,23 +83,23 @@ except Exception as e:
 
 # --- PREPROCESSING ---
 ATURAN_BINNING = {
-    'Usia': {'bins': [0, 16, 60, 150], 'labels': ['Dibawah_Umur', 'Usia_Produktif', 'Diatas_Umur']},
-    'Berat_Badan': {'bins': [0, 49.9, 300], 'labels': ['Terlalu_Ringan', 'Ideal']},
-    'Tekanan_Darah_Sistolik': {'bins': [0, 89, 160, 300], 'labels': ['Sistolik_Rendah', 'Sistolik_Normal', 'Sistolik_Tinggi']},
-    'Tekanan_Darah_Diastolik': {'bins': [0, 59, 100, 200], 'labels': ['Diastolik_Rendah', 'Diastolik_Normal', 'Diastolik_Tinggi']},
-    'Denyut_Nadi': {'bins': [0, 49, 100, 200], 'labels': ['Nadi_Rendah', 'Nadi_Normal', 'Nadi_Tinggi']},
-    'Suhu_Tubuh': {'bins': [0, 36.4, 37.5, 50], 'labels': ['Suhu_Rendah', 'Suhu_Normal', 'Suhu_Tinggi']},
-    'Hemoglobin': {'bins': [0, 12.4, 17.0, 30], 'labels': ['Hb_Rendah', 'Hb_Normal', 'Hb_Tinggi']}
+    'Usia': {'bins': [-1, 16, 60, 150], 'labels': ['Dibawah_Umur', 'Usia_Produktif', 'Diatas_Umur']},
+    'BB': {'bins': [-1, 44.9, 300], 'labels': ['Terlalu_Ringan', 'Ideal']},
+    'Sistolik': {'bins': [-1, 89, 160, 400], 'labels': ['Rendah', 'Normal', 'Tinggi']},
+    'Diastolik': {'bins': [-1, 59, 100, 300], 'labels': ['Rendah', 'Normal', 'Tinggi']},
+    'Nadi': {'bins': [-1, 49, 100, 300], 'labels': ['Rendah', 'Normal', 'Tinggi']},
+    'Suhu': {'bins': [-1, 36.4, 37.5, 60], 'labels': ['Rendah', 'Normal', 'Tinggi']},
+    'HB': {'bins': [-1, 12.4, 17.0, 30], 'labels': ['Rendah', 'Normal', 'Tinggi']}
 }
 
 KOLOM_FITUR = [
-    'Usia', 'Jenis_Kelamin', 'Berat_Badan', 'Tekanan_Darah_Sistolik', 'Tekanan_Darah_Diastolik', 
-    'Denyut_Nadi', 'Suhu_Tubuh', 'Hemoglobin', 
-    'Tertusuk_Jarum_Medis', 'Riwayat_Operasi', 'Sedang_Obat', 'Riwayat_Kehamilan_Bersalin', 
-    'Vaksinasi_<28Hari', 'Sakit_Kepala_Demam', 'Pernah_Transfusi', 'Memiliki_Tato_Piercing', 
-    'Perilaku_Seksual_Berisko_Tinggi',
-    'Riwayat_Penyakit_Kronis', 'Pernah_Berada_Diluar_Negeri', 
-    'Tidur_Cukup', 'Makan_Sebelum_Donor'
+    'Usia', 'Jenis_Kelamin', 'BB', 'Sistolik', 'Diastolik', 
+    'Nadi', 'Suhu', 'HB', 
+    'Operasi', 'Kehamilan', 
+    'Demam', 'Transfusi', 
+    'Seksual_Berisko',
+    'Penyakit_Kronis',  
+    'Tidur_Cukup', 'Sarapan'
 ]
 
 
@@ -133,23 +128,26 @@ def cari_alasan_penolakan(data):
     alasan = []
     try:
         if float(data.get('Usia',0)) < 17: alasan.append("Usia < 17")
-        if float(data.get('Berat_Badan',0)) < 49.9: alasan.append("BB < 45 kg")
-        if float(data.get('Hemoglobin',0)) < 12.5: alasan.append("Hb Rendah")
-        if float(data.get('Tekanan_Darah_Sistolik',0)) > 160: alasan.append("Tensi Tinggi")
-        if float(data.get('Tekanan_Darah_Sistolik',0)) < 100: alasan.append("Tensi Rendah")
-        if float(data.get('Tekanan_Darah_Diastolik',0)) > 100: alasan.append("Tensi Tinggi")
-        if float(data.get('Tekanan_Darah_Diastolik',0)) < 60: alasan.append("Tensi Rendah")
+        if float(data.get('BB',0)) < 49.9: alasan.append("BB < 45 kg")
+        if float(data.get('HB',0)) < 12.5: alasan.append("Hb Rendah")
+        if float(data.get('Sistolik',0)) > 160: alasan.append("Tensi Tinggi")
+        if float(data.get('Sistolik',0)) < 100: alasan.append("Tensi Rendah")
+        if float(data.get('Diastolik',0)) > 100: alasan.append("Tensi Tinggi")
+        if float(data.get('Diastolik',0)) < 60: alasan.append("Tensi Rendah")
     except: pass
     
     # List risiko 
-    risk = ['Tertusuk_Jarum_Medis', 'Riwayat_Operasi', 'Sedang_Obat', 'Vaksinasi_<28Hari', 
-            'Sakit_Kepala_Demam', 'Memiliki_Tato_Piercing', 'Perilaku_Seksual_Berisko_Tinggi', 
-            'Riwayat_Penyakit_Kronis', 'Pernah_Berada_Diluar_Negeri']
+    risk = []
     for r in risk:
         if data.get(r) == 'Ya': alasan.append(f"{r.replace('_', ' ')}")
-    if data.get('Riwayat_Kehamilan_Bersalin') == 'Ya': alasan.append("Sedang Hamil/Menyusui")
+    if data.get('Operasi') == 'Ya': alasan.append("Riwayat Operasi < 6 Bulan")
+    if data.get('Demam') == 'Ya': alasan.append("Sedang Demam")
+    if data.get('Transfusi') == 'Ya': alasan.append("Menerima Transfusi Darah < 6 Bulan Terakhir")
+    if data.get('Seksual_Berisko') == 'Ya': alasan.append("Perilaku Seksual Berisiko Tinggi")
+    if data.get('Penyakit_Kronis') == 'Ya': alasan.append("Riwayat Penyakit Kronis")
+    if data.get('Kehamilan') == 'Ya': alasan.append("Sedang Hamil/Menyusui")
     if data.get('Tidur_Cukup') == 'Tidak': alasan.append("Kurang Tidur")
-    if data.get('Makan_Sebelum_Donor') == 'Tidak': alasan.append("Tidak Makan Sebelum Donor")
+    if data.get('Sarapan') == 'Tidak': alasan.append("Tidak Makan Sebelum Donor")
     
     return alasan if alasan else ["Analisis Model"]
 
@@ -260,25 +258,20 @@ def export_excel():
                 'Golongan_Darah': row.gol_darah,
                 'Usia': row.usia,
                 'Jenis_Kelamin': row.jenis_kelamin,
-                'Berat_Badan': row.berat_badan,
-                'Hemoglobin': row.hb,
-                'Tekanan_Darah_Sistolik': row.tensi_sistolik,
-                'Tekanan_Darah_Diastolik': row.tensi_diastolik,
-                'Denyut_Nadi': row.nadi,
-                'Suhu_Tubuh': row.suhu,
-                'Tertusuk_Jarum_Medis': row.tertusuk_jarum,
-                'Riwayat_Operasi': row.riwayat_operasi,
-                'Sedang_Obat': row.sedang_obat,
-                'Riwayat_Kehamilan_Bersalin': row.riwayat_hamil,
-                'Vaksinasi_<28Hari': row.vaksinasi,
-                'Sakit_Kepala_Demam': row.sakit_kepala,
-                'Pernah_Transfusi': row.transfusi,
-                'Memiliki_Tato_Piercing': row.tato_piercing,
-                'Perilaku_Seksual_Berisko_Tinggi': row.seks_berisiko,
-                'Riwayat_Penyakit_Kronis': row.penyakit_kronis,
-                'Pernah_Berada_Diluar_Negeri': row.luar_negeri,
+                'BB': row.berat_badan,
+                'HB': row.hb,
+                'Sistolik': row.tensi_sistolik,
+                'Diastolik': row.tensi_diastolik,
+                'Nadi': row.nadi,
+                'Suhu': row.suhu,
+                'Operasi': row.riwayat_operasi,
+                'RiwayatKehamilan': row.riwayat_hamil,
+                'Demam': row.sakit_kepala,
+                'Transfusi': row.transfusi,
+                'Seksual_Berisko': row.seks_berisiko,
+                'Penyakit_Kronis': row.penyakit_kronis,
                 'Tidur_Cukup': row.tidur_cukup,
-                'Makan_Sebelum_Donor': row.makan_sebelum,
+                'Sarapan': row.makan_sebelum,
                 'Status_Prediksi': row.status_prediksi,
                 'Alasan_Penolakan': row.alasan_penolakan
             }),
@@ -317,11 +310,11 @@ def predict_page(): return render_template('predict.html')
 @login_required
 def evaluasi():
     metrics = {
-        'training_accuracy': 93.81,   
-        'testing_accuracy': 93.82,   
-        'presisi': 93,
-        'recall': 92,
-        'f1_score': 93
+        'training_accuracy': 94.76,   
+        'testing_accuracy': 94.33,   
+        'presisi': 94,
+        'recall': 94,
+        'f1_score': 94
     }
     return render_template('evaluasi.html', metrics=metrics)
 
@@ -343,19 +336,15 @@ def api_predict():
             nama_pendonor=data.get('Nama_Pendonor'), nik=data.get('NIK'),
             alamat=data.get('Alamat'), gol_darah=data.get('Golongan_Darah'),
             usia=data.get('Usia'), jenis_kelamin=data.get('Jenis_Kelamin'),
-            berat_badan=data.get('Berat_Badan'), hb=data.get('Hemoglobin'),
-            tensi_sistolik=data.get('Tekanan_Darah_Sistolik'), tensi_diastolik=data.get('Tekanan_Darah_Diastolik'),
-            suhu=data.get('Suhu_Tubuh'), nadi=data.get('Denyut_Nadi'),
+            berat_badan=data.get('BB'), hb=data.get('HB'),
+            tensi_sistolik=data.get('Sistolik'), tensi_diastolik=data.get('Diastolik'),
+            suhu=data.get('Suhu'), nadi=data.get('Nadi'),
             # Kuesioner
-            tertusuk_jarum=data.get('Tertusuk_Jarum_Medis'), riwayat_operasi=data.get('Riwayat_Operasi'),
-            sedang_obat=data.get('Sedang_Obat'), riwayat_hamil=data.get('Riwayat_Kehamilan_Bersalin'),
-            vaksinasi=data.get('Vaksinasi_<28Hari'), sakit_kepala=data.get('Sakit_Kepala_Demam'),
-            transfusi=data.get('Pernah_Transfusi'), tato_piercing=data.get('Memiliki_Tato_Piercing'),
-            seks_berisiko=data.get('Perilaku_Seksual_Berisko_Tinggi'),
-            penyakit_kronis=data.get('Riwayat_Penyakit_Kronis'),
-            luar_negeri=data.get('Pernah_Berada_Diluar_Negeri'),
+            riwayat_operasi=data.get('Operasi'), riwayat_hamil=data.get('Kehamilan'),
+            sakit_kepala=data.get('Demam'), transfusi=data.get('Transfusi'), 
+            seks_berisiko=data.get('Seksual_Berisko'), penyakit_kronis=data.get('Penyakit_Kronis'),
             # Kesiapan
-            tidur_cukup=data.get('Tidur_Cukup'), makan_sebelum=data.get('Makan_Sebelum_Donor'),
+            tidur_cukup=data.get('Tidur_Cukup'), makan_sebelum=data.get('Sarapan'),
             status_prediksi=hasil, alasan_penolakan=alasan_str
         )
         db.session.add(riwayat_baru)
