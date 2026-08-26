@@ -103,19 +103,26 @@ KOLOM_FITUR = [
 ]
 
 
+STANDAR_PMI = {
+    'Usia': {'min': 17, 'max': 60},        
+    'Nadi': {'min': 50, 'max': 100},       
+    'Suhu': {'min': 36.5, 'max': 37.5},    
+}
+
+
 def preprocess_input(data_dict):
     df_input = pd.DataFrame([data_dict])
     for col, rule in ATURAN_BINNING.items():
         df_input[col] = pd.to_numeric(df_input[col], errors='coerce').fillna(0)
         df_input[col] = pd.cut(df_input[col], bins=rule['bins'], labels=rule['labels'], right=True)
         if df_input[col].isnull().any(): df_input[col] = rule['labels'][0]
-    
+
     # Filter hanya kolom yang dibutuhkan model
     # Jika model butuh kolom yg tidak ada di form, kita isi default "Tidak"
     for col in KOLOM_FITUR:
         if col not in df_input.columns:
             df_input[col] = "Tidak"
-            
+
     try:
         df_ordered = df_input[KOLOM_FITUR]
         data_encoded = encoder.transform(df_ordered.astype(str))
@@ -124,16 +131,51 @@ def preprocess_input(data_dict):
     except KeyError as e:
         raise ValueError(f"Input Kurang: {e}")
 
+
+def cek_standar_pmi(data):
+
+    try:
+        usia = float(data.get('Usia', 0))
+        batas_usia = STANDAR_PMI['Usia']
+        if usia < batas_usia['min'] or usia > batas_usia['max']:
+            return False
+    except (ValueError, TypeError):
+        return False
+
+    try:
+        nadi = float(data.get('Nadi', 0))
+        batas_nadi = STANDAR_PMI['Nadi']
+        if nadi < batas_nadi['min'] or nadi > batas_nadi['max']:
+            return False
+    except (ValueError, TypeError):
+        return False
+
+    try:
+        suhu = float(data.get('Suhu', 0))
+        batas_suhu = STANDAR_PMI['Suhu']
+        if suhu < batas_suhu['min'] or suhu > batas_suhu['max']:
+            return False
+    except (ValueError, TypeError):
+        return False
+
+    return True
+
+
 def cari_alasan_penolakan(data):
     alasan = []
     try:
         if float(data.get('Usia',0)) < 17: alasan.append("Usia < 17")
+        if float(data.get('Usia',0)) > 60: alasan.append("Usia > 60")
         if float(data.get('BB',0)) < 49.9: alasan.append("BB < 45 kg")
         if float(data.get('HB',0)) < 12.5: alasan.append("Hb Rendah")
         if float(data.get('Sistolik',0)) > 160: alasan.append("Tensi Tinggi")
         if float(data.get('Sistolik',0)) < 100: alasan.append("Tensi Rendah")
         if float(data.get('Diastolik',0)) > 100: alasan.append("Tensi Tinggi")
         if float(data.get('Diastolik',0)) < 60: alasan.append("Tensi Rendah")
+        if float(data.get('Nadi',0)) < 50: alasan.append("Nadi < 50 x/menit")
+        if float(data.get('Nadi',0)) > 100: alasan.append("Nadi > 100 x/menit")
+        if float(data.get('Suhu',0)) < 36.5: alasan.append("Suhu < 36.5")
+        if float(data.get('Suhu',0)) > 37.5: alasan.append("Suhu > 37.5")
     except: pass
     
     # List risiko 
@@ -148,7 +190,7 @@ def cari_alasan_penolakan(data):
     if data.get('Kehamilan') == 'Ya': alasan.append("Sedang Hamil/Menyusui")
     if data.get('Tidur_Cukup') == 'Tidak': alasan.append("Kurang Tidur")
     if data.get('Sarapan') == 'Tidak': alasan.append("Tidak Makan Sebelum Donor")
-    
+
     return alasan if alasan else ["Analisis Model"]
 
 # --- ROUTES ---
@@ -175,7 +217,7 @@ def register():
         if User.query.filter_by(username=uname).first():
             flash('Username sudah dipakai!', 'error')
         else:
-            new_user = User(username=uname, nama_lengkap=nama, 
+            new_user = User(username=uname, nama_lengkap=nama,
                             password=generate_password_hash(pw, method='pbkdf2:sha256'))
             db.session.add(new_user)
             db.session.commit()
@@ -194,12 +236,12 @@ def logout():
 def dashboard():
     # 1. Ambil Data Riwayat (Untuk Tabel)
     data_riwayat = Riwayat.query.order_by(Riwayat.id.desc()).all()
-    
+
     # 2. Hitung Statistik Total dari Database (BARU)
     total_layak = Riwayat.query.filter_by(status_prediksi='Layak').count()
     total_tidak = Riwayat.query.filter_by(status_prediksi='Tidak Layak').count()
     total_semua = total_layak + total_tidak
-    
+
     # Bungkus dalam dictionary agar rapi saat dikirim ke HTML
     statistik = {
         'layak': total_layak,
@@ -277,25 +319,25 @@ def export_excel():
             }),
         # 3. Buat DataFrame Pandas
         df_export = pd.DataFrame(data_list)
-        
+
         # 4. Tulis ke Excel (In-Memory Buffer)
         output = BytesIO()
         with pd.ExcelWriter(output, engine='openpyxl') as writer:
             df_export.to_excel(writer, index=False, sheet_name='Riwayat Skrining')
-            
+
         # Reset pointer buffer ke awal
         output.seek(0)
-        
+
         # 5. Kirim file ke browser user
         filename = f"Laporan_Donor_PMI_{datetime.now().strftime('%Y%m%d_%H%M')}.xlsx"
-        
+
         return send_file(
             output,
             mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             as_attachment=True,
             download_name=filename
         )
-        
+
     except Exception as e:
         print(f"Error Export: {e}")
         flash(f"Gagal export data: {str(e)}", "error")
@@ -310,8 +352,8 @@ def predict_page(): return render_template('predict.html')
 @login_required
 def evaluasi():
     metrics = {
-        'training_accuracy': 94.76,   
-        'testing_accuracy': 94.33,   
+        'training_accuracy': 94.76,
+        'testing_accuracy': 94.33,
         'presisi': 94,
         'recall': 94,
         'f1_score': 94
@@ -327,9 +369,14 @@ def api_predict():
         processed = preprocess_input(data)
         pred = model.predict(processed)[0]
         hasil = 'Layak' if pred == 0 else 'Tidak Layak'
+
+        if not cek_standar_pmi(data):
+            hasil = 'Tidak Layak'
+
+        # Satu-satunya sumber teks alasan penolakan
         alasan = cari_alasan_penolakan(data) if hasil == 'Tidak Layak' else []
         alasan_str = ", ".join(alasan) if alasan else "-"
-        
+
         # Simpan ke DB
         riwayat_baru = Riwayat(
             petugas=current_user.nama_lengkap,
@@ -341,7 +388,7 @@ def api_predict():
             suhu=data.get('Suhu'), nadi=data.get('Nadi'),
             # Kuesioner
             riwayat_operasi=data.get('Operasi'), riwayat_hamil=data.get('Kehamilan'),
-            sakit_kepala=data.get('Demam'), transfusi=data.get('Transfusi'), 
+            sakit_kepala=data.get('Demam'), transfusi=data.get('Transfusi'),
             seks_berisiko=data.get('Seksual_Berisko'), penyakit_kronis=data.get('Penyakit_Kronis'),
             # Kesiapan
             tidur_cukup=data.get('Tidur_Cukup'), makan_sebelum=data.get('Sarapan'),
