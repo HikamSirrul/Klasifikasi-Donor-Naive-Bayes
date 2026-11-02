@@ -1,14 +1,6 @@
 # Sistem Klasifikasi Kelayakan Calon Pendonor Darah Menggunakan Algoritma Naïve Bayes
 
-Aplikasi berbasis web untuk membantu proses klasifikasi kelayakan calon pendonor darah berdasarkan data identitas, pemeriksaan fisik, dan riwayat kesehatan. Sistem ini mengimplementasikan algoritma **Naïve Bayes** sebagai metode machine learning untuk mengklasifikasikan calon pendonor ke dalam dua kategori, yaitu **Layak** dan **Tidak Layak**.
-
 Proyek ini dikembangkan sebagai implementasi machine learning dalam sistem informasi berbasis web dengan studi kasus PMI Kota Bandung.
-
-## 🎯 Latar Belakang
-
-Proses skrining calon pendonor darah merupakan tahapan penting untuk memastikan bahwa pendonor memenuhi persyaratan kesehatan sebelum melakukan donor darah.
-
-Aplikasi ini dikembangkan untuk membantu proses klasifikasi berdasarkan sejumlah parameter pemeriksaan, sehingga petugas dapat memperoleh hasil prediksi kelayakan secara lebih terstruktur.
 
 ## ✨ Fitur Utama
 
@@ -72,13 +64,13 @@ Sebelum menjalankan aplikasi, pastikan perangkat telah memiliki:
 ### 1. Clone Repository
 
 ```bash
-git clone https://github.com/USERNAME/REPOSITORY.git
+git clone https://github.com/HikamSirrul/Klasifikasi-Donor-Naive-Bayes.git
 ```
 
 Masuk ke direktori proyek:
 
 ```bash
-cd REPOSITORY
+cd Klasifikasi-Donor-Naive-Bayes
 ```
 
 ### 2. Buat Virtual Environment
