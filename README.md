@@ -1,25 +1,29 @@
-# Sistem Klasifikasi Kelayakan Calon Pendonor Darah Menggunakan Algoritma Naïve Bayes
+# Blood Donor Eligibility Classification System
 
-Proyek ini dikembangkan sebagai implementasi machine learning dalam sistem informasi berbasis web dengan studi kasus PMI Kota Bandung.
+A web-based application that classifies blood donor eligibility using the **Naïve Bayes machine learning algorithm**. The system processes donor information, physical examination results, and medical history to predict whether a potential donor is **Eligible** or **Not Eligible**.
 
-## ✨ Fitur Utama
+<escape> </escape>
 
-- **Autentikasi Pengguna** — Login dan registrasi untuk petugas.
-- **Input Data Pendonor** — Pencatatan identitas dan informasi calon pendonor.
-- **Pemeriksaan Fisik** — Input usia, berat badan, hemoglobin, tekanan darah, denyut nadi, dan suhu tubuh.
-- **Riwayat Kesehatan** — Pencatatan riwayat operasi, kehamilan, demam, transfusi darah, perilaku seksual berisiko, dan penyakit kronis.
-- **Klasifikasi Naïve Bayes** — Prediksi kelayakan calon pendonor menggunakan model machine learning.
-- **Validasi Standar Skrining** — Pemeriksaan sejumlah parameter berdasarkan aturan kelayakan yang diterapkan dalam aplikasi.
-- **Riwayat Klasifikasi** — Penyimpanan hasil prediksi calon pendonor ke dalam database.
-- **Evaluasi Model** — Penyajian informasi evaluasi performa model.
+## 🌐 Live Demo
 
-## 🧠 Algoritma Machine Learning
+**[Access Live Demo](https://hikamsrl.pythonanywhere.com/)**
 
-Sistem ini menggunakan algoritma **Naïve Bayes**, yaitu metode klasifikasi probabilistik berdasarkan Teorema Bayes dengan asumsi independensi antarfitur.
+## ✨ Features
 
-Model machine learning digunakan untuk mengklasifikasikan data calon pendonor berdasarkan fitur-fitur pemeriksaan yang telah melalui tahap preprocessing.
+- **User Authentication** — Secure login and registration for application users.
+- **Donor Information Management** — Input and manage donor personal information.
+- **Physical Examination** — Record age, body weight, hemoglobin, blood pressure, pulse rate, and body temperature.
+- **Medical History** — Record medical conditions and relevant health information.
+- **Naïve Bayes Classification** — Predict donor eligibility using a trained machine learning model.
+- **Eligibility Validation** — Apply predefined screening criteria to support the classification process.
+- **Classification History** — Store and review previous classification results.
+- **Model Evaluation** — Display machine learning model evaluation information.
 
-Tahapan umum pengolahan data meliputi:
+## 🧠 Machine Learning
+
+This application uses the **Naïve Bayes algorithm**, a probabilistic classification method based on Bayes' Theorem.
+
+The classification process involves:
 
 1. Data Collection
 2. Data Preprocessing
@@ -28,66 +32,56 @@ Tahapan umum pengolahan data meliputi:
 5. Model Evaluation
 6. Model Deployment
 
-Model yang telah dilatih disimpan dalam format `.pkl` menggunakan Joblib untuk kemudian digunakan oleh aplikasi Flask.
+The trained machine learning model is stored in `.pkl` format using Joblib and loaded by the Flask application for prediction.
 
-## 🛠️ Teknologi yang Digunakan
+## 🛠️ Tech Stack
 
-| Teknologi | Kegunaan |
+| Technology | Purpose |
 |---|---|
-| Python | Bahasa pemrograman utama |
-| Flask | Framework backend aplikasi web |
-| Scikit-learn | Implementasi machine learning |
-| Pandas | Pengolahan dan preprocessing data |
-| NumPy | Operasi komputasi numerik |
-| Joblib | Penyimpanan dan pemuatan model |
-| MySQL | Database penyimpanan data |
-| Flask-SQLAlchemy | ORM untuk interaksi database |
-| Flask-Login | Autentikasi dan manajemen sesi |
-| HTML | Struktur halaman web |
-| Tailwind CSS | Styling dan antarmuka pengguna |
-| JavaScript | Interaksi dan komunikasi frontend dengan backend |
-| Chart.js | Visualisasi data dan evaluasi model |
-| DataTables | Pengelolaan dan penyajian tabel data |
+| Python | Main programming language |
+| Flask | Backend web framework |
+| Scikit-learn | Machine learning implementation |
+| Pandas | Data processing and preprocessing |
+| NumPy | Numerical computation |
+| Joblib | Model serialization and loading |
+| MySQL | Relational database |
+| Flask-SQLAlchemy | Database ORM |
+| Flask-Login | User authentication and session management |
+| HTML | Web page structure |
+| Tailwind CSS | User interface styling |
+| JavaScript | Frontend interaction and API communication |
+| Chart.js | Data visualization |
+| DataTables | Interactive data tables |
 
-## 📋 Persyaratan Sistem
+## ⚙️ Installation and Setup
 
-Sebelum menjalankan aplikasi, pastikan perangkat telah memiliki:
-
-- Python 3.10 atau versi yang kompatibel dengan dependensi proyek.
-- MySQL Server.
-- Git.
-- Web browser.
-- Pip untuk instalasi package Python.
-
-## ⚙️ Instalasi dan Konfigurasi
-
-### 1. Clone Repository
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/HikamSirrul/Klasifikasi-Donor-Naive-Bayes.git
 ```
 
-Masuk ke direktori proyek:
+Navigate to the project directory:
 
 ```bash
 cd Klasifikasi-Donor-Naive-Bayes
 ```
 
-### 2. Buat Virtual Environment
+### 2. Create a Virtual Environment
 
 ```bash
 python -m venv venv
 ```
 
-Aktifkan virtual environment.
+Activate the virtual environment.
 
-Windows:
+**Windows:**
 
 ```bash
 venv\Scripts\activate
 ```
 
-Linux/macOS:
+**Linux/macOS:**
 
 ```bash
 source venv/bin/activate
@@ -95,92 +89,77 @@ source venv/bin/activate
 
 ### 3. Install Dependencies
 
-Jika repository menyediakan `requirements.txt`, jalankan:
-
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Konfigurasi Database
+### 4. Configure the Database
 
-Buat database MySQL dengan nama:
+Create a MySQL database:
 
 ```sql
 CREATE DATABASE skripsi_pmi;
 ```
 
-Sesuaikan konfigurasi koneksi database pada aplikasi dengan kredensial MySQL di lingkungan lokal Anda.
+Configure the database connection settings in the application according to your local MySQL credentials.
 
-### 5. Siapkan Model Machine Learning
+### 5. Configure the Machine Learning Model
 
-Pastikan file model berikut tersedia pada lokasi yang sesuai dengan konfigurasi aplikasi:
+Make sure the trained model file is available in the expected project directory:
 
 ```text
 model_naive_bayes_pmi.pkl
 ```
 
-File tersebut berisi model Naïve Bayes dan encoder yang digunakan untuk preprocessing data sebelum klasifikasi.
+The file contains the trained Naïve Bayes model and encoder required for data preprocessing and classification.
 
-### 6. Jalankan Aplikasi
+### 6. Run the Application
 
 ```bash
 python app.py
 ```
 
-Setelah server berjalan, buka browser dan akses:
+Open your browser and visit:
 
 ```text
 http://127.0.0.1:5000
 ```
 
-## 📂 Struktur Fitur Aplikasi
+## 📊 Classification Results
 
-Secara umum, aplikasi mencakup beberapa bagian utama:
+The application provides two classification outcomes:
 
-- **Dashboard** — Menampilkan informasi ringkasan aplikasi.
-- **Form Skrining** — Digunakan untuk memasukkan data calon pendonor.
-- **Klasifikasi** — Menampilkan hasil prediksi kelayakan.
-- **Riwayat Klasifikasi** — Menyimpan dan menampilkan hasil klasifikasi sebelumnya.
-- **Evaluasi Model** — Menampilkan informasi performa model machine learning.
-
-## 📊 Kategori Hasil Klasifikasi
-
-Sistem menghasilkan dua kategori klasifikasi:
-
-| Kategori | Keterangan |
+| Result | Description |
 |---|---|
-| Layak | Calon pendonor diklasifikasikan memenuhi kriteria berdasarkan sistem. |
-| Tidak Layak | Calon pendonor diklasifikasikan tidak memenuhi kriteria berdasarkan sistem. |
+| Eligible | The system classifies the potential donor as meeting the implemented eligibility criteria. |
+| Not Eligible | The system classifies the potential donor as not meeting the implemented eligibility criteria. |
 
-**Catatan:** Hasil klasifikasi merupakan rekomendasi pendukung proses skrining dan bukan pengganti pemeriksaan maupun keputusan medis petugas yang berwenang.
+**Disclaimer:** Classification results are intended as decision-support information and should not replace professional medical screening or decisions made by authorized medical personnel.
 
-## 🔒 Keamanan dan Privasi
+## 🔒 Security and Privacy
 
-Aplikasi mengelola informasi identitas dan data kesehatan calon pendonor. Oleh karena itu, penggunaan aplikasi perlu memperhatikan:
+- Protect personal and medical information.
+- Keep database credentials confidential.
+- Restrict access to authorized users.
+- Do not upload real donor records or sensitive information to a public repository.
 
-- Perlindungan informasi pribadi calon pendonor.
-- Pengamanan kredensial database.
-- Pengelolaan hak akses pengguna.
-- Keamanan penyimpanan dan akses data klasifikasi.
-
-Hindari mengunggah data pendonor asli, kredensial database, maupun informasi sensitif ke repository publik.
-
-## 👨‍💻 Pengembang
+## 👨‍💻 Developer
 
 **Hikam Sirrul Arifin**
 
 Informatics Engineering Graduate | Full-Stack Web Developer
 
-Bidang minat:
+**Areas of Interest:**
 - Software Development
 - Full-Stack Web Development
+- Backend Development
 - Machine Learning
 - Cybersecurity
 
-## 📄 Lisensi
+## 📄 License
 
-Proyek ini dikembangkan untuk keperluan akademik dan portofolio. Penggunaan, pengembangan, atau distribusi lebih lanjut dapat disesuaikan dengan ketentuan lisensi yang ditetapkan oleh pengembang.
+This project is developed for educational and portfolio purposes. Further use, modification, and distribution are subject to the license specified by the repository owner.
 
 ---
 
-**Sistem Klasifikasi Kelayakan Calon Pendonor Darah Menggunakan Algoritma Naïve Bayes Berbasis Web — Studi Kasus PMI Kota Bandung.**
+Developed by **Hikam Sirrul Arifin**.
